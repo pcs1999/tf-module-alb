@@ -50,7 +50,7 @@ resource "aws_lb_listener" "backend_app_listeners" {
     fixed_response {
       content_type = "text/plain"
       message_body = "NO_RULE"
-      status_code  = "200"
+      status_code  = "503"
     }
   }
 }
