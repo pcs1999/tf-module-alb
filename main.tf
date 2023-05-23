@@ -14,6 +14,15 @@ resource "aws_security_group" "alb_subnet_group" {
 
   }
 
+  ingress {
+    description      = "HTTPS"
+    from_port        = 443
+    to_port          = 443
+    protocol         = "tcp"
+    cidr_blocks      = var.allow_cidr
+
+  }
+
   egress {
     from_port        = 0
     to_port          = 0
@@ -44,6 +53,9 @@ resource "aws_lb_listener" "backend_app_listeners" {
   port              = "80"
   protocol          = "HTTP"
 
+
+
+
   default_action {
     type = "fixed-response"
 
@@ -55,6 +67,14 @@ resource "aws_lb_listener" "backend_app_listeners" {
   }
 }
 
+resource "aws_route53_record" "public_alb" {
+  count = var.internal  ? 0 : 1
+  zone_id = "Z09063921V1VGRMXUB88J"
+  name    = var.dns_domain
+  type    = "CNAME"
+  ttl     = 30
+  records = [aws_lb.alb.dns_name]
+}
 
 
 
